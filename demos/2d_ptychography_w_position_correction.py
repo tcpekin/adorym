@@ -52,7 +52,7 @@ params_cameraman = {'fname': 'data_cameraman_err_10.h5',
                     'use_checkpoint': False,
                     'optimize_all_probe_pos': True,
                     'save_history': True,
-                    'backend': 'pytorch'
+                    'backend': 'autograd'
                     }
 
 params = params_cameraman

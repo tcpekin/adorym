@@ -250,6 +250,7 @@ def initialize_probe(probe_size, probe_type, pupil_function=None, probe_initial=
         if kwargs['raw_data_type'] == 'magnitude':
             dat = dat ** 2
         if not kwargs['normalize_fft']:
+            # TODO - is this normalization correct - parsevals' theorem works here but also we need to make sure the fourier transform is not normalized. and figure out the 'this should be removed' comment.
             # The direct return of FFT function has a total power that is n_pixels times of the input.
             # This should be removed.
             if sign_convention == 1:
