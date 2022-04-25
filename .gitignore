@@ -1,0 +1,13 @@
+.DS_Store
+.vscode/
+*egg-info
+*__pycache__*
+
+*.tiff
+*.h5
+*.npy
+loss*.txt
+checkpoint.txt
+probe_pos*.txt
+summary.txt
+params_0

@@ -62,6 +62,12 @@ def gen_freq_mesh(voxel_nm, shape):
 def get_kernel(dist_nm, lmbda_nm, voxel_nm, grid_shape, fresnel_approx=True, sign_convention=1):
     """Get unshifted Fresnel propagation kernel for TF algorithm.
 
+    The fresnel propagation is the same as ROP with the fresnel_approx = True
+
+    :param dist_nm: propogation distance
+    :param lmbda_nm: wavelength
+    :param voxel_nm: pixel size
+    :param grid_shape: probe shape
     :param u, v: Reciprocal space meshgrids.
     :param dist_nm: Propagation distance in nm.
     """
@@ -145,7 +151,7 @@ def multislice_propagate_batch(grid_batch, probe_real, probe_imag, energy_ev, ps
     else:
         voxel_nm = np.array([psize_cm] * 3) * 1.e7
 
-    lmbda_nm = 1240. / energy_ev
+    lmbda_nm = 1240. / energy_ev # TODO Change to be more accurate
     mean_voxel_nm = np.prod(voxel_nm) ** (1. / 3)
     size_nm = np.array(grid_shape) * voxel_nm
 
@@ -156,6 +162,7 @@ def multislice_propagate_batch(grid_batch, probe_real, probe_imag, energy_ev, ps
         n_slices = repeating_slice
 
     if pure_projection:
+        # TODO - test with scale_ri_by_k = False and True
         k1 = 2. * PI * delta_nm / lmbda_nm if scale_ri_by_k else 1.
         if type == 'delta_beta':
             # Use sign_convention = 1 for Goodman convention: exp(ikz); n = 1 - delta + i * beta
@@ -217,6 +224,7 @@ def multislice_propagate_batch(grid_batch, probe_real, probe_imag, energy_ev, ps
             # At the start of bin, initialize slice array.
             this_step = min([binning, n_slices - i_slice])
             if repeating_slice is None:
+                # TODO this is equivalent to equal slices in ROP?
                 delta_slice = grid_batch[:, :, :, i_slice:i_slice + this_step, 0] if this_step > 1 else grid_batch[:, :, :, i_slice, 0]
             else:
                 delta_slice = grid_batch[:, :, :, 0:1, 0]
@@ -264,6 +272,7 @@ def multislice_propagate_batch(grid_batch, probe_real, probe_imag, energy_ev, ps
         if isinstance(free_prop_cm, str) and free_prop_cm == 'inf':
             # Use sign_convention = 1 for Goodman convention: exp(ikz); n = 1 - delta + i * beta
             # Use sign_convention = -1 for opposite convention: exp(-ikz); n = 1 - delta - i * beta
+            # TODO - is this normalization with the normalize_fft argument the source of the difference? ROP does ortho normalization
             if sign_convention == 1:
                 probe_real, probe_imag = w.fft2_and_shift(probe_real, probe_imag, axes=[1, 2], normalize=normalize_fft)
             else:

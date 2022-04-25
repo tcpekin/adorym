@@ -360,8 +360,8 @@ def reconstruct_ptychography(
         # ================================================================================
         # generate Fresnel kernel.
         # ================================================================================
-        voxel_nm = np.array([psize_cm] * 3) * 1.e7 * ds_level
-        lmbda_nm = 1240. / energy_ev
+        voxel_nm = np.array([psize_cm] * 3) * 1.e7 * ds_level # TODO - change to nm
+        lmbda_nm = 1240. / energy_ev # TODO change to e- equation
         delta_nm = voxel_nm[-1]
         h = get_kernel(delta_nm * binning, lmbda_nm, voxel_nm, probe_size, fresnel_approx=fresnel_approx, sign_convention=sign_convention)
 

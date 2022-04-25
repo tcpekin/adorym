@@ -60,7 +60,7 @@ class ForwardModel(object):
     def get_regularization_value(self, obj, device=None):
         reg = w.create_variable(0., device=self.device)
         for r in self.reg_list:
-            reg = reg + r.get_value(obj, distribution_mode=self.distribution_mode, device=device)
+            reg = reg + r.get_value(obj, distribution_mode=self.distribution_mode, device=device) # TODO - look at later
         print_flush('  Reg term = {}.'.format(w.to_numpy(reg)), 0, rank, **self.stdout_options)
         return reg
 
@@ -70,7 +70,7 @@ class ForwardModel(object):
                 return i
         raise ValueError('{} is not in the argument list.'.format(arg))
 
-    def get_mismatch_loss(self, this_pred_batch, this_prj_batch):
+    def get_mismatch_loss(self, this_pred_batch, this_prj_batch): # TODO - make sure this_pred_batch vs this_prj_batch are in the right position
         if self.loss_function_type == 'lsq':
             if self.raw_data_type == 'magnitude':
                 loss = w.mean((this_pred_batch - w.abs(this_prj_batch)) ** 2)
@@ -95,7 +95,7 @@ class ForwardModel(object):
         """
         pass
 
-    def get_data(self, this_i_theta, this_ind_batch, theta_downsample=None, ds_level=1):
+    def get_data(self, this_i_theta, this_ind_batch, theta_downsample=None, ds_level=1): # TODO - here the raw data is called prj_batch
         if theta_downsample is None: theta_downsample = 1
         this_prj_batch = self.prj[this_i_theta * theta_downsample, this_ind_batch]
         this_prj_batch = w.create_variable(abs(this_prj_batch), requires_grad=False, device=self.device)
@@ -237,6 +237,7 @@ class PtychographyModel(ForwardModel):
             this_prj_offset = None
 
         if optimize_probe_pos_offset:
+            # TODO - come back
             this_offset = probe_pos_offset[this_i_theta]
             probe_real, probe_imag = realign_image_fourier(probe_real, probe_imag, this_offset, axes=(1, 2), device=device_obj)
 
