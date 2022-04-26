@@ -494,7 +494,7 @@ def reconstruct_ptychography(
                                      non_negativity=non_negativity)
             else:
                 obj.arr = w.create_variable(obj_arr, device=device_obj)
-
+        
         # ================================================================================
         # Create forward model class.
         # ================================================================================
@@ -683,7 +683,10 @@ def reconstruct_ptychography(
                                                              requires_grad=optimize_all_probe_pos, device=device_obj)
             else:
                 if common_probe_pos:
-                    optimizable_params['probe_pos_correction'] = w.create_variable(np.tile(probe_pos - probe_pos_int, [n_theta, 1, 1]),
+                    probe_pos_correction = (probe_pos - probe_pos_int)
+                    probe_pos_correction[np.abs(probe_pos_correction) < 1e-10] = 0
+                    probe_pos_correction = np.tile(probe_pos_correction, [n_theta, 1, 1])
+                    optimizable_params['probe_pos_correction'] = w.create_variable(probe_pos_correction,
                                                              requires_grad=optimize_all_probe_pos, device=device_obj)
                 else:
                     optimizable_params['probe_pos_correction'] = w.create_variable(probe_pos_correction, requires_grad=optimize_all_probe_pos, device=device_obj)
@@ -1107,7 +1110,7 @@ def reconstruct_ptychography(
                 # ================================================================================
                 with w.no_grad():
                     malias = np if distribution_mode == 'distributed_object' else w
-                    if distribution_mode is not 'shared_file' and obj.arr is not None:
+                    if distribution_mode != 'shared_file' and obj.arr is not None:
                         if non_negativity and unknown_type != 'real_imag':
                             obj.arr = malias.clip(obj.arr, 0, None)
                         if unknown_type == 'delta_beta':

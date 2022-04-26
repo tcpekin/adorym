@@ -367,6 +367,7 @@ class PtychographyModel(ForwardModel):
         return ex_mag_ls
 
     def get_loss_function(self):
+        # TODO - this loss function computes a loss on a per-batch basis
         def calculate_loss(obj, probe_real, probe_imag, probe_defocus_mm,
                            probe_pos_offset, this_i_theta, this_pos_batch, prj,
                            probe_pos_correction, this_ind_batch, tilt_ls, prj_pos_offset):
