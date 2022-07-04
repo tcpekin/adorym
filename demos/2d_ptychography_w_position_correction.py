@@ -1,3 +1,4 @@
+
 from adorym.ptychography import reconstruct_ptychography
 import numpy as np
 import dxchange
@@ -14,7 +15,7 @@ for i in [':', '-', ' ']:
         timestr = timestr.replace(i, '')
 
 
-params_cameraman = {'fname': 'data_cameraman_err_10.h5',
+params_cameraman = {'fname': '/Users/tompekin/Documents/Research/code/adorym/demos/cameraman_pos_error/data_cameraman_err_10.h5',
                     'theta_st': 0,
                     'theta_end': 0,
                     'theta_downsample': 1,
@@ -24,13 +25,13 @@ params_cameraman = {'fname': 'data_cameraman_err_10.h5',
                     'alpha_b': 0,
                     'gamma': 0,
                     'probe_size': (72, 72),
-                    'learning_rate': 4e-3,
+                    'learning_rate': 4e-2,
                     'center': 512,
                     'energy_ev': 5000,
                     'psize_cm': 1.e-7,
                     'minibatch_size': 2704,
                     'n_batch_per_update': 1,
-                    'output_folder': 'recon',
+                    'output_folder': 'bugtest_torch_fft',
                     'cpu_only': True,
                     'save_path': 'cameraman_pos_error',
                     'multiscale_level': 1,
@@ -43,16 +44,22 @@ params_cameraman = {'fname': 'data_cameraman_err_10.h5',
                     'probe_initial': [np.squeeze(dxchange.read_tiff('cameraman_pos_error/probe_mag_true.tiff')), np.squeeze(dxchange.read_tiff('cameraman_pos_error/probe_phase_true.tiff'))],
                     'forward_algorithm': 'fresnel',
                     'object_type': 'phase_only',
-                    'probe_pos': np.array([(y, x) for y in np.arange(-10, 246, 5) for x in np.arange(-10, 246, 5)]),
+                    # 'probe_pos': np.array([(y, x) for y in np.arange(-10, 246, 5) for x in np.arange(-10, 246, 5)]),
+                    'probe_pos': np.array([np.loadtxt('/Users/tompekin/Documents/Research/code/adorym/demos/cameraman_pos_error/probe_pos_err_10_true.txt')[0],np.loadtxt('/Users/tompekin/Documents/Research/code/adorym/demos/cameraman_pos_error/probe_pos_err_10_true.txt')][1]),
                     'finite_support_mask': None,
                     'free_prop_cm': 'inf',
-                    'optimizer': 'adam',
+                    'optimizer': 'cg',
                     'two_d_mode': True,
                     'distribution_mode': None,
                     'use_checkpoint': False,
                     'optimize_all_probe_pos': True,
+                    'all_probe_pos_learning_rate': 1.e3,
                     'save_history': True,
-                    'backend': 'pytorch'
+                    # 'use_epie': True,
+                    # 'epie_alpha': 0.1,
+                    'backend': 'pytorch',
+                    'unknown_type': 'delta_beta',
+                    # 'pure_projection':True
                     }
 
 params = params_cameraman

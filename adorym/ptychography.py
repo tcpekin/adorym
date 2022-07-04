@@ -1107,7 +1107,7 @@ def reconstruct_ptychography(
                 # ================================================================================
                 with w.no_grad():
                     malias = np if distribution_mode == 'distributed_object' else w
-                    if distribution_mode is not 'shared_file' and obj.arr is not None:
+                    if distribution_mode != 'shared_file' and obj.arr is not None:
                         if non_negativity and unknown_type != 'real_imag':
                             obj.arr = malias.clip(obj.arr, 0, None)
                         if unknown_type == 'delta_beta':

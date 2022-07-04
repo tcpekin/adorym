@@ -616,8 +616,7 @@ def fft(var_real, var_imag, axis=-1, backend='autograd', normalize=False):
         return anp.real(var), anp.imag(var)
     elif backend == 'pytorch':
         var = tc.fft.fft(var, dim=axis, norm=norm)
-        var_real, var_imag = tc.real(var), tc.imag(var)
-        return var_real, var_imag
+        return tc.real(var), tc.imag(var)
 
 
 @set_bn
@@ -629,8 +628,7 @@ def ifft(var_real, var_imag, axis=-1, backend='autograd', normalize=False):
         return anp.real(var), anp.imag(var)
     elif backend == 'pytorch':
         var = tc.fft.ifft(var, dim=axis, norm=norm)
-        var_real, var_imag = tc.real(var), tc.imag(var)
-        return var_real, var_imag
+        return tc.real(var), tc.imag(var)
 
 
 @set_bn
@@ -642,8 +640,7 @@ def fft2(var_real, var_imag, axes=(-2, -1), backend='autograd', normalize=False)
         return anp.real(var), anp.imag(var)
     elif backend == 'pytorch':
         var = tc.fft.fft2(var, dim=axes, norm=norm)
-        var_real, var_imag = tc.real(var), tc.imag(var)
-        return var_real, var_imag
+        return tc.real(var), tc.imag(var)
 
 
 @set_bn
