@@ -4,6 +4,7 @@
 *__pycache__*
 
 *.tiff
+*.png
 *.h5
 *.npy
 *.zip
