@@ -1147,7 +1147,7 @@ def reconstruct_ptychography(
                     elif distribution_mode == 'distributed_object':
                         gradient.rotate_array(coord_new, interpolation=interpolation,
                                               precalculate_rotation_coords=precalculate_rotation_coords,
-                                              apply_to_arr_rot=False, overwrite_arr=True, override_backend='numpy'
+                                              apply_to_arr_rot=False, overwrite_arr=True, override_backend='numpy',
                                               dtype=cache_dtype, override_device='cpu')
                     comm.Barrier()
                     print_flush(f'  Gradient rotation done in {time.time() - t_rot_0} s.', sto_rank, rank, **stdout_options)

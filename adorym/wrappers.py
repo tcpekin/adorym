@@ -683,6 +683,8 @@ def fft2_complex(var, axes=(-2, -1), backend='autograd', normalize=False):
     if backend == 'autograd':
         var = anp.fft.fft2(var, axes=axes, norm=norm)
     elif backend == 'pytorch':
+        if not isinstance(var, tc.Tensor):
+            var = tc.tensor(var)
         var = tc.fft.fft2(var, dim=axes, norm=norm)
     return var
 
