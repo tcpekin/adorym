@@ -433,6 +433,7 @@ def initialize_probe(
     extra_defocus_cm=None,
     invert_phase=False,
     sign_convention=1,
+    override_backend=None,
     **kwargs,
 ):
     if probe_type == "gaussian":
@@ -459,15 +460,15 @@ def initialize_probe(
         probe_real, probe_imag = mag_phase_to_real_imag(
             probe_mag, np.zeros_like(probe_mag)
         )
-        probe_real, probe_imag = p.fresnel_propagate(
-            probe_real,
-            probe_imag,
+        probe = p.fresnel_propagate_complex(
+            probe_real + 1j* probe_imag,
             defocus_cm * 1e7,
             lmbda_nm,
             [psize_cm * 1e7] * 3,
-            override_backend="autograd",
+            override_backend=override_backend,
             sign_convention=sign_convention,
         )
+        probe_real, probe_imag = w.real(probe), w.imag(probe)
     elif probe_type == "ifft":
         print_flush(
             "Estimating probe from measured data...",
@@ -506,15 +507,15 @@ def initialize_probe(
     if extra_defocus_cm is not None:
         lmbda_nm = kwargs["lmbda_nm"]
         psize_cm = kwargs["psize_cm"]
-        probe_real, probe_imag = p.fresnel_propagate(
-            probe_real,
-            probe_imag,
+        probe = p.fresnel_propagate_complex(
+            probe_real + 1j*probe_imag,
             extra_defocus_cm * 1e7,
             lmbda_nm,
             [psize_cm * 1e7] * 3,
-            override_backend="autograd",
+            override_backend=override_backend,
             sign_convention=sign_convention,
         )
+        probe_real, probe_imag = w.real(probe), w.imag(probe)
     # If probe is initialized by IFFT, the phase needs to be inverted at the end to correct for missing phase error.
     # if invert_phase or probe_type == 'ifft':
     #     wavefront = probe_real + 1j * probe_imag

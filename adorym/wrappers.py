@@ -1209,17 +1209,17 @@ def rotate(arr, theta, axis=0, backend='autograd', device=None):
             axis_arrangement[0], axis_arrangement[q] = axis_arrangement[q], axis_arrangement[0]
         if axis_arrangement[2] < axis_arrangement[3]:
             theta = -theta
-        arr = permute_axes(arr, axis_arrangement, override_backend='pytorch')
-        naught = cast(tc.tensor([0.], device=device), pytorch_dtype_query_mapping_dict[theta.dtype], override_backend='pytorch')
+        arr = permute_axes(arr, axis_arrangement, override_backend=backend)
+        naught = cast(tc.tensor([0.], device=device), pytorch_dtype_query_mapping_dict[theta.dtype], override_backend=backend)
         m0 = tc.cat([tc.cos(theta), -tc.sin(theta), naught])
         m1 = tc.cat([tc.sin(theta), tc.cos(theta), naught])
         m = tc.stack([m0, m1]).view(1, 2, 3)
-        m = cast(tile(m, [arr.shape[0], 1, 1], override_backend='pytorch'), pytorch_dtype_query_mapping_dict[arr.dtype], override_backend='pytorch')
+        m = cast(tile(m, [arr.shape[0], 1, 1], override_backend=backend), pytorch_dtype_query_mapping_dict[arr.dtype], override_backend=backend)
         g = tc.nn.functional.affine_grid(m, arr.shape, align_corners=False)
 
         arr = tc.nn.functional.grid_sample(arr, g, padding_mode='border', align_corners=False)
         arr = permute_axes(arr, [axis_arrangement.index(0), axis_arrangement.index(1),
-                                 axis_arrangement.index(2), axis_arrangement.index(3)], override_backend='pytorch')
+                                 axis_arrangement.index(2), axis_arrangement.index(3)], override_backend=backend)
         return arr
 
 

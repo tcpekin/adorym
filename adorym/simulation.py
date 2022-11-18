@@ -581,7 +581,7 @@ def simulate_ptychography(
             elif distribution_mode == 'distributed_object':
                 obj.rotate_array(coord_ls, interpolation=interpolation,
                                  precalculate_rotation_coords=precalculate_rotation_coords,
-                                 apply_to_arr_rot=False, override_backend='autograd', dtype=cache_dtype,
+                                 apply_to_arr_rot=False, override_backend='numpy', dtype=cache_dtype,
                                  override_device='cpu')
             elif distribution_mode is None and rotate_out_of_loop:
                 obj.rotate_array(coord_ls, interpolation=interpolation,
